@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -88,10 +89,14 @@ public class Grid implements Iterable<Cell> {
         return numberOfColumns;
     }
 
-
-    // TODO: Écrire une version correcte de cette méthode.
     private List<Cell> getNeighbours(int rowIndex, int columnIndex) {
-        return null;
+        List<Cell> neighbours = new ArrayList<>();
+        for (int yIndex = rowIndex -1; yIndex <= rowIndex+1;yIndex ++){
+            for (int xIndex = columnIndex -1; xIndex <= columnIndex+1;xIndex ++){
+                neighbours.add( getCell(yIndex,xIndex) );
+            }
+        }
+        return neighbours;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
