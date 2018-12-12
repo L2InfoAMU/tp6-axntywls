@@ -123,13 +123,16 @@ public class Grid implements Iterable<Cell> {
         return CellState.DEAD;
     }
 
-
-
-    // TODO: Écrire une version correcte de cette méthode.
     private CellState[][] calculateNextStates() {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for(int yIndex=0; yIndex < getNumberOfRows();yIndex++){
+            for (int xIndex=0; xIndex < getNumberOfColumns(); xIndex++){
+                nextCellState[xIndex][yIndex] = calculateNextState(xIndex,yIndex);
+            }
+        }
         return nextCellState;
     }
+
 
     // TODO: Écrire une version correcte de cette méthode.
     private void updateStates(CellState[][] nextState) {
