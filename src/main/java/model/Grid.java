@@ -96,12 +96,18 @@ public class Grid implements Iterable<Cell> {
                 neighbours.add( getCell(yIndex,xIndex) );
             }
         }
+        //we have to remove our actual Cell!
+        neighbours.remove(getCell(rowIndex,columnIndex));
         return neighbours;
     }
 
-    // TODO: Écrire une version correcte de cette méthode.
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return 0;
+        List<Cell> neighbours = getNeighbours(rowIndex,columnIndex);
+        int aliveNeighbours = 0;
+        for (Cell cell : neighbours){
+            if (cell.isAlive()){aliveNeighbours ++;}
+        }
+        return aliveNeighbours;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
