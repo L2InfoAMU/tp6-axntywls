@@ -157,9 +157,11 @@ public class Grid implements Iterable<Cell> {
      * reproduction.</li>
      * </ul>
      */
-    // TODO: Écrire une version correcte de cette méthode.
     void updateToNextGeneration() {
-
+        //Get the grid of new_states
+        CellState[][] nextStates = calculateNextStates();
+        //Set the new_states of the Cells of "this".
+        updateStates(nextStates);
     }
 
     /**
