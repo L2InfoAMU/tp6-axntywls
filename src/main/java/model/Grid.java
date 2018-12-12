@@ -127,7 +127,7 @@ public class Grid implements Iterable<Cell> {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
         for(int yIndex=0; yIndex < getNumberOfRows();yIndex++){
             for (int xIndex=0; xIndex < getNumberOfColumns(); xIndex++){
-                nextCellState[xIndex][yIndex] = calculateNextState(xIndex,yIndex);
+                nextCellState[yIndex][xIndex] = calculateNextState(yIndex,xIndex);
             }
         }
         return nextCellState;
@@ -137,7 +137,7 @@ public class Grid implements Iterable<Cell> {
         Iterator<Cell> iterator = iterator();
         for(int yIndex=0; yIndex < getNumberOfRows();yIndex++){
             for (int xIndex=0; xIndex < getNumberOfColumns(); xIndex++){
-                CellState new_state = nextState[xIndex][yIndex];
+                CellState new_state = nextState[yIndex][xIndex];
                 iterator.next().setState(new_state);
             }
         }
