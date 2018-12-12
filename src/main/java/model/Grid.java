@@ -91,12 +91,12 @@ public class Grid implements Iterable<Cell> {
 
     private List<Cell> getNeighbours(int rowIndex, int columnIndex) {
         List<Cell> neighbours = new ArrayList<>();
-        for (int yIndex = rowIndex -1; yIndex <= rowIndex+1;yIndex ++){
-            for (int xIndex = columnIndex -1; xIndex <= columnIndex+1;xIndex ++){
+        for (int yIndex = rowIndex -1; yIndex <= rowIndex+1; yIndex ++){
+            for (int xIndex = columnIndex -1; xIndex <= columnIndex+1; xIndex ++){
                 neighbours.add( getCell(yIndex,xIndex) );
             }
         }
-        //we have to remove our actual Cell!
+        //we have to remove our actual Cell! => [getCell(rowIndex,columnIndex)]
         neighbours.remove(getCell(rowIndex,columnIndex));
         return neighbours;
     }
@@ -111,16 +111,38 @@ public class Grid implements Iterable<Cell> {
     }
 
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        int aliveNeighbours = countAliveNeighbours(rowIndex,columnIndex);
-        Cell myCell = getCell(rowIndex,columnIndex);
+        int aliveNeighbours = countAliveNeighbours(rowIndex, columnIndex);
+        Cell myCell = getCell(rowIndex, columnIndex);
         //if myCell is ALIVE:
-        if (myCell.isAlive()){
-            if (aliveNeighbours == 2 || aliveNeighbours== 3){return CellState.ALIVE;}
+        if (myCell.isAlive()) {
+            if (aliveNeighbours == 2 || aliveNeighbours == 3) {
+                return myCell.getState();
+            }
             return CellState.DEAD;
         }
         //if myCell is DEAD:
-        if (aliveNeighbours == 3){return CellState.ALIVE;}
+        if (aliveNeighbours == 3) {
+            return chooseColorOnBirth(rowIndex,columnIndex);
+        }
         return CellState.DEAD;
+    }
+    /**
+     * Give birth to a Cell with the same color as the majority of it's neighbours.
+     * in this method, Our cell has exactly 3 neighbours.
+     * @param rowIndex
+     * @param columnIndex
+     * @return  The state of the majority of the neighbours.
+     */
+    private CellState chooseColorOnBirth(int rowIndex, int columnIndex){
+        List<Cell> neighbours = getNeighbours(rowIndex, columnIndex);
+        int nb_of_red_friends = 0;
+        for (Cell cell : neighbours) {
+            if (cell.getState() == CellState.ALIVE_RED){nb_of_red_friends ++;}
+            //2 is the majority of neighbours alive, if we have 2 red, then our cell will born RED.
+            if (nb_of_red_friends == 2 ){return CellState.ALIVE_RED;}
+        }
+        //here there is not: at least 2 red neighbours, so our majority is BLUE.
+        return CellState.ALIVE_BLUE;
     }
 
     private CellState[][] calculateNextStates() {
@@ -184,10 +206,16 @@ public class Grid implements Iterable<Cell> {
     void randomGeneration(Random random) {
         Iterator<Cell> iterator = iterator();
         while(iterator.hasNext()){
-            if (random.nextBoolean()) // nextBoolean == 1, then our cell is ALIVE
-                iterator.next().setState(CellState.ALIVE);
-            else{                       // else it is DEAD
-                iterator.next().setState(CellState.DEAD);
+            // nextBoolean == 1, then our cell is ALIVE
+            if (random.nextBoolean()) {
+                // if true again, then our CELL is RED *** chance =(1/2) *(1/2) = 1/4
+                if (random.nextBoolean()){iterator.next().setState(CellState.ALIVE_RED);}
+                //else our Cell is BLUE *** chance =(1/2) *(1/2) = 1/4
+                else{iterator.next().setState(CellState.ALIVE_BLUE);}
+            }
+            // else it is DEAD
+            else{
+                iterator.next().setState(CellState.DEAD);//chance = (1/2)
             }
         }
     }
